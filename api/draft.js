@@ -2,6 +2,10 @@
 // Gemini(구글 검색 그라운딩)로 초안을 생성하는 서버리스 함수.
 // 무료 티어로 사용 가능 — GEMINI_API_KEY 하나만 있으면 됨.
 
+// 검색 그라운딩 응답은 시간이 걸릴 수 있어 실행시간을 60초까지 늘림
+// (Vercel Hobby 플랜 기본값은 짧아서 타임아웃 나기 쉬움)
+export const config = { maxDuration: 60 };
+
 export default async function handler(req, res) {
   if (req.method !== "POST") {
     return res.status(405).json({ error: "POST만 허용됩니다." });
