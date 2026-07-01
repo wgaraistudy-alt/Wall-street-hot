@@ -224,7 +224,17 @@ async function callApi(path, body) {
     headers: { "content-type": "application/json" },
     body: JSON.stringify(body),
   });
-  const data = await r.json();
+
+  let data;
+  try {
+    data = await r.json();
+  } catch {
+    // 서버가 JSON이 아닌 응답(타임아웃 등)을 보낸 경우
+    throw new Error(
+      "서버 응답 시간이 초과됐거나 오류가 발생했습니다 (검색에 시간이 오래 걸릴 때 발생할 수 있어요). 잠시 후 다시 시도해주세요."
+    );
+  }
+
   if (!r.ok) throw new Error(data.error || `요청 실패 (${r.status})`);
   return data;
 }
@@ -254,8 +264,8 @@ $("runBtn").addEventListener("click", async () => {
 
     $("results").innerHTML =
       renderCard("final", "✅ 최종 대본", finalScript, true) +
-      renderCard("check", "🔎 Gemini 팩트체크 리포트", factCheck, false) +
-      renderCard("draft", "📝 Claude 초안 (검증 전)", draft, false);
+      renderCard("check", "🔎 팩트체크 재검토 리포트", factCheck, false) +
+      renderCard("draft", "📝 초안 (검증 전)", draft, false);
   } catch (e) {
     setStatus("", false);
     showError(e.message || String(e));
