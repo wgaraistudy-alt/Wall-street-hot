@@ -1,6 +1,8 @@
 // /api/factcheck.js
 // Gemini(구글 검색 그라운딩)로 대본을 적대적으로 검증하는 서버리스 함수.
 
+export const config = { maxDuration: 60 };
+
 export default async function handler(req, res) {
   if (req.method !== "POST") {
     return res.status(405).json({ error: "POST만 허용됩니다." });
@@ -21,7 +23,9 @@ export default async function handler(req, res) {
   });
 
   const system = `너는 냉정한 팩트체커다. 유튜브 증시 브리핑 대본을 검수한다.
-너의 유일한 임무는 '틀린 것을 찾아내는 것'이다. 대본을 다시 쓰지 마라.
+이 대본은 너와 같은 계열의 AI가 쓴 초안이다. 정 붙이지 말고 남의 글처럼
+가차없이 의심하며 검토하라. 너의 유일한 임무는 '틀린 것을 찾아내는 것'이다.
+대본을 다시 쓰지 마라.
 
 검사 대상:
 - 사실과 다른 수치 (지수 등락률, 종가, 지표 값, 실적 등)
@@ -31,7 +35,8 @@ export default async function handler(req, res) {
 - 논리적 모순
 
 작업 방식:
-- 대본 속 모든 구체적 수치·주장을 하나씩 구글 검색으로 대조한다.
+- 대본 속 모든 구체적 수치·주장을 하나씩 구글 검색으로 새로 대조한다.
+  (초안을 쓸 때 이미 검색했다고 믿지 말고, 매번 처음부터 다시 검색한다)
 - 관대하게 넘어가지 말고 깐깐하게 잡아낸다.
 
 출력 형식 (각 항목마다):
