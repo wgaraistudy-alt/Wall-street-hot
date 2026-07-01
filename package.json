@@ -1,0 +1,9 @@
+{
+  "name": "wallstreet-hot-script",
+  "version": "1.0.0",
+  "private": true,
+  "description": "제니기자의 월스트리트 핫! — Claude/Gemini 교차 검증 대본 생성 웹앱",
+  "engines": {
+    "node": ">=18"
+  }
+}
